@@ -23,8 +23,9 @@ namespace Console_Process_TaskManager_App
                     Console.WriteLine("1 ------List all Processes--------");
                     Console.WriteLine("2 ---------Kill Process-----------");
                     Console.WriteLine("3 --------Start any Task----------");
-                    Console.WriteLine("4 -----Creat Custom process-------");
-                    Console.WriteLine("5 ------------Exit----------------");
+                    Console.WriteLine("4 ---------Kill any Task----------");
+                    Console.WriteLine("5 -----Create Custom process------");
+                    Console.WriteLine("6 ------------Exit----------------");
                     Console.Write("Enter Your Choice : ");
                     int choice = int.Parse(Console.ReadLine());
 
@@ -71,13 +72,19 @@ namespace Console_Process_TaskManager_App
                                     break;
                             case 3:
                             Console.Clear();
-                            StartAnyTask.StartAnyProcess();
+                            TaskManager.StartAnyTask();
                                 break;
-                            case 4:
+                        case 4:
                             Console.Clear();
-                            StartAnyTask.StartAnyProcess();
+                            TaskManager.KillAnyTask();
+                            break;
+
+                        case 5:
+                            Console.Clear();
+                            StartCustomProcess();
                                 break;
-                            case 5:
+                       
+                        case 6:
                             
                             Environment.Exit(0);
                                 break;
@@ -103,15 +110,12 @@ namespace Console_Process_TaskManager_App
         public static void ListProcesses()
         { 
             try {
-                //Console.WriteLine(" Process Name\t\tID\t\tCPU Usage");
-
 
                 var runningProcesses = from proc in Process.GetProcesses()
                                    orderby proc.Id
                                    select proc;
             foreach (var proc in runningProcesses)
             {
-                    //string info = $"-> PID: {proc.Id}\tName: {proc.ProcessName}";
                 Console.WriteLine($"-> pID:{proc.Id}\tpNAME: {proc.ProcessName}");
                     Console.WriteLine();
             }
@@ -139,5 +143,28 @@ namespace Console_Process_TaskManager_App
             }
 
         }
+
+        public static void StartCustomProcess()
+        {
+            try
+            {
+                ProcessStartInfo processStartInfo = new ProcessStartInfo("Chrome"); 
+
+                processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;   
+                processStartInfo.UseShellExecute = true;
+                processStartInfo.Verb = "Open";
+                Process.Start(processStartInfo);
+
+
+            }
+            catch(InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+
+
+       
     }
 }

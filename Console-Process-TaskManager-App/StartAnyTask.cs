@@ -7,26 +7,36 @@ using System.Threading.Tasks;
 
 namespace Console_Process_TaskManager_App
 {
-    internal class StartAnyTask
+    internal class TaskManager
     {
-        public static Process? _Process = null;
-        public static void StartAnyProcess()
+       
+        public static void StartAnyTask()
         {
+              Process? _Process = null;
+            StartAnyTask:
             try
             {
      
                 Console.WriteLine("Enter file name to open");
-                string output = Console.ReadLine() ?? string.Empty;
-                ProcessStartInfo processStart = new ProcessStartInfo($@"{output.Trim()}");
-                processStart.UseShellExecute = true;
-                //processStart.RedirectStandardOutput = true;
-                processStart.WindowStyle = ProcessWindowStyle.Hidden;
-                processStart.RedirectStandardError = true;
-                _Process = Process.Start(processStart);
+                var output = Console.ReadLine();
+                _Process = Process.Start($@"{output}");
 
-            } catch (Exception )
+            } catch (InvalidOperationException ex)
             {
-                StartAnyProcess();
+                Console.WriteLine(ex.Message);
+                goto StartAnyTask;
+            }
+
+        }
+
+        public static void KillAnyTask()
+        {
+            Console.WriteLine("Enter Task Name");
+            var input = Console.ReadLine();
+
+            foreach (var proc in Process.GetProcessesByName(input))
+            {
+                proc.Kill(true);
             }
         }
     }
